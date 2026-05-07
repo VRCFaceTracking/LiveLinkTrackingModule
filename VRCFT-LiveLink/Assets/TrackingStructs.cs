@@ -65,6 +65,14 @@ namespace LiveLinkExtTrackingInterface
         public float BrowOuterUpLeft;
         public float BrowOuterUpRight;
     }
+    
+    // Live Link head tracking data
+    public class LiveLinkTrackingDataHead
+    {
+        public float HeadYaw;
+        public float HeadPitch;
+        public float HeadRoll;
+    }
 
     // All Live Link tracking data
     public class LiveLinkTrackingDataStruct
@@ -73,6 +81,7 @@ namespace LiveLinkExtTrackingInterface
         public LiveLinkTrackingDataEye right_eye = new LiveLinkTrackingDataEye();
         public LiveLinkTrackingDataLowerFace lowerface = new LiveLinkTrackingDataLowerFace();
         public LiveLinkTrackingDataBrow brow = new LiveLinkTrackingDataBrow();
+        public LiveLinkTrackingDataHead head = new LiveLinkTrackingDataHead();
 
         //public LiveLinkTrackingDataEye getCombined()
         //{
@@ -90,6 +99,8 @@ namespace LiveLinkExtTrackingInterface
 
         public void ProcessData(Dictionary<string, float> values)
         {
+            //TODO: We should def not be using reflection so much here
+            
             // For each of the eye tracking blendshapes
             foreach (var field in typeof(LiveLinkTrackingDataEye).GetFields())
             {
@@ -110,6 +121,12 @@ namespace LiveLinkExtTrackingInterface
             foreach (var field in typeof(LiveLinkTrackingDataBrow).GetFields())
             {
                 field.SetValue(brow, values[field.Name]);
+            }
+            
+            // Head datas
+            foreach (var field in typeof(LiveLinkTrackingDataHead).GetFields())
+            {
+                field.SetValue(head, values[field.Name]);
             }
         }
     }

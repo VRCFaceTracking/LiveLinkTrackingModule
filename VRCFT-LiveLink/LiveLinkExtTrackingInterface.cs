@@ -317,6 +317,8 @@ namespace LiveLinkExtTrackingInterface
                 // Mouth Expression Stuff
                 if (trackingSupported.Item2)
                     UpdateMouthExpressions(ref UnifiedTracking.Data.Shapes, ref _latestData);
+                
+                UpdateHeadData(ref UnifiedTracking.Data.Head, ref _latestData);
             }
         }
 
@@ -479,6 +481,14 @@ namespace LiveLinkExtTrackingInterface
             #region Tongue Expression Set   
             unifiedExpressions[(int)UnifiedExpressions.TongueOut].Weight = trackingData.lowerface.TongueOut;
             #endregion
+        }
+
+        public void UpdateHeadData(ref UnifiedHeadData unifiedExpressionHead,
+            ref LiveLinkTrackingDataStruct trackingData)
+        {
+            unifiedExpressionHead.HeadPitch = -trackingData.head.HeadPitch;
+            unifiedExpressionHead.HeadYaw = -trackingData.head.HeadYaw;
+            unifiedExpressionHead.HeadRoll = -trackingData.head.HeadRoll;
         }
 
         // A chance to de-initialize everything.
