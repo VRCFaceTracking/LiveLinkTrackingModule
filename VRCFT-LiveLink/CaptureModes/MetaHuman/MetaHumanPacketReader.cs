@@ -10,6 +10,7 @@ public class MetaHumanPacketReader : ILiveLinkPacketReader
     private const int CURVE_OFFSET = 46;
 
     private float[] _shapes = new float[Enum.GetNames(typeof(MetaHumanShapes)).Length];
+    private float Shape(MetaHumanShapes shape) => _shapes[(int)shape];
     
     public bool CanRead(byte[] buffer) => buffer.Length == PACKET_SIZE;
     
@@ -49,6 +50,26 @@ public class MetaHumanPacketReader : ILiveLinkPacketReader
     private void UpdateEyeData(ref UnifiedEyeData eye)
     {
         //TODO
+        eye.Left.Openness = 1.0f - Math.Max(0,
+            Math.Min(1,
+                Shape(MetaHumanShapes.EyeBlinkL) +
+                Shape(MetaHumanShapes.EyeBlinkL) * Shape(MetaHumanShapes.EyeSquintInnerL)));
+        
+        eye.Right.Openness = 1.0f - Math.Max(0,
+            Math.Min(1,
+                Shape(MetaHumanShapes.EyeBlinkR) +
+                Shape(MetaHumanShapes.EyeBlinkR) * Shape(MetaHumanShapes.EyeSquintInnerR)));
+
+        eye.Left.Gaze.x = Shape(MetaHumanShapes.EyeLookRightL) + -Shape(MetaHumanShapes.EyeLookLeftL);
+        eye.Left.Gaze.y = Shape(MetaHumanShapes.EyeLookUpL) + -Shape(MetaHumanShapes.EyeLookDownL);
+        eye.Right.Gaze.x = Shape(MetaHumanShapes.EyeLookRightR) + -Shape(MetaHumanShapes.EyeLookLeftR);
+        eye.Right.Gaze.y = Shape(MetaHumanShapes.EyeLookUpR) + -Shape(MetaHumanShapes.EyeLookDownR);
+
+        /*eye.Left.PupilDiameter_MM = Shape(MetaHumanShapes.EyePupilWideL) * 10f;
+        eye.Right.PupilDiameter_MM = Shape(MetaHumanShapes.EyePupilWideR) * 10f;
+
+        eye._minDilation = 0.0f;
+        eye._maxDilation = 10.0f;*/
     }
 
     private void UpdateEyeExpressions(ref UnifiedExpressionShape[] trackingData)
@@ -59,7 +80,7 @@ public class MetaHumanPacketReader : ILiveLinkPacketReader
     private void UpdateMouthExpressions(ref UnifiedExpressionShape[] trackingData)
     {
         //TODO
-        trackingData[(int)UnifiedExpressions.JawOpen].Weight = _shapes[(int)MetaHumanShapes.JawOpen];
+        trackingData[(int)UnifiedExpressions.JawOpen].Weight = Shape(MetaHumanShapes.JawOpen);
     }
 
     public void UpdateHeadData(ref UnifiedHeadData unifiedExpressionHead)
