@@ -155,7 +155,7 @@ public class MetaHumanPacketReader : ILiveLinkPacketReader
         trackingData[(int)UnifiedExpressions.CheekSuckLeft].Weight = Shape(MetaHumanShapes.MouthCheekSuckL);
         trackingData[(int)UnifiedExpressions.LipSuckCornerLeft].Weight = Shape(MetaHumanShapes.MouthCheekSuckL);//maybe something better
 
-
+        //MouthStretchLipsClose to do
         trackingData[(int)UnifiedExpressions.MouthStretchRight].Weight = Shape(MetaHumanShapes.MouthStretchR);
         trackingData[(int)UnifiedExpressions.MouthStretchLeft].Weight = Shape(MetaHumanShapes.MouthStretchL);
 
@@ -194,11 +194,18 @@ public class MetaHumanPacketReader : ILiveLinkPacketReader
 
         //decided to pick MouthLipRollIn cause it was more reliable
         //avaliable options for lip suck: MouthLipsTogether, MouthLipBite, MouthLipRollIn
-        trackingData[(int)UnifiedExpressions.LipSuckUpperRight].Weight = Shape(MetaHumanShapes.MouthUpperLipRollInR);
-        trackingData[(int)UnifiedExpressions.LipSuckUpperLeft].Weight = Shape(MetaHumanShapes.MouthUpperLipRollInL);
-        trackingData[(int)UnifiedExpressions.LipSuckLowerRight].Weight = Shape(MetaHumanShapes.MouthLowerLipRollInR);
-        trackingData[(int)UnifiedExpressions.LipSuckLowerLeft].Weight = Shape(MetaHumanShapes.MouthLowerLipRollInL);
+/*                trackingData[(int)UnifiedExpressions.LipSuckUpperRight].Weight = Shape(MetaHumanShapes.MouthUpperLipBiteR);
+                trackingData[(int)UnifiedExpressions.LipSuckUpperLeft].Weight = Shape(MetaHumanShapes.MouthUpperLipBiteL);
+                trackingData[(int)UnifiedExpressions.LipSuckLowerRight].Weight = Shape(MetaHumanShapes.MouthLowerLipBiteR);
+                trackingData[(int)UnifiedExpressions.LipSuckLowerLeft].Weight = Shape(MetaHumanShapes.MouthLowerLipBiteL);*/
 
+
+        trackingData[(int)UnifiedExpressions.LipSuckUpperRight].Weight = Math.Clamp((Shape(MetaHumanShapes.JawOpen) * Shape(MetaHumanShapes.MouthUpperLipBiteR)) + ((1-(Shape(MetaHumanShapes.JawOpen))) * Shape(MetaHumanShapes.MouthUpperLipRollInR)), 0, 1);
+        trackingData[(int)UnifiedExpressions.LipSuckUpperLeft].Weight = Math.Clamp((Shape(MetaHumanShapes.JawOpen) * Shape(MetaHumanShapes.MouthUpperLipBiteL)) + ((1-(Shape(MetaHumanShapes.JawOpen))) * Shape(MetaHumanShapes.MouthUpperLipRollInL)), 0, 1);
+        trackingData[(int)UnifiedExpressions.LipSuckLowerRight].Weight = Math.Clamp((Shape(MetaHumanShapes.JawOpen) * Shape(MetaHumanShapes.MouthLowerLipBiteR)) + ((1-(Shape(MetaHumanShapes.JawOpen))) * Shape(MetaHumanShapes.MouthLowerLipRollInR)), 0, 1);
+        trackingData[(int)UnifiedExpressions.LipSuckLowerLeft].Weight = Math.Clamp((Shape(MetaHumanShapes.JawOpen) * Shape(MetaHumanShapes.MouthLowerLipBiteL)) + ((1-(Shape(MetaHumanShapes.JawOpen))) * Shape(MetaHumanShapes.MouthLowerLipRollInL)), 0, 1);
+
+        trackingData[(int)UnifiedExpressions.MouthClosed].Weight = Shape(MetaHumanShapes.JawOpen) * Math.Clamp((Shape(MetaHumanShapes.MouthLipsTogetherUR) + Shape(MetaHumanShapes.MouthLipsTogetherUL) + Shape(MetaHumanShapes.MouthLipsTogetherDR) + Shape(MetaHumanShapes.MouthLipsTogetherDL)),0,1);
 
         trackingData[(int)UnifiedExpressions.MouthPressRight].Weight = (Shape(MetaHumanShapes.MouthLipsPressR));
         trackingData[(int)UnifiedExpressions.MouthPressLeft].Weight = (Shape(MetaHumanShapes.MouthLipsPressL));
